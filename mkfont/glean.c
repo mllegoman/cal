@@ -8,10 +8,14 @@ c[2] = 0;
 	c[0] = fgetc(F);
 	c[1] = fgetc(F);
 	c[2] = fgetc(F);
+		if (c[2]==3) {
+		printf("\\e");
+		}
 		if (c[2]==2){
 		printf("%c%c", c[0], c[1]);
 		}
 		if (c[2]==1) {
+		printf("[%d,%d]", c[0], c[1]);
 		printf("\\c");
 		}
 		if (c[2]==0) {

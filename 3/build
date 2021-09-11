@@ -1,0 +1,5 @@
+#!/bin/bash
+[ ${1//[!1]} ] && gcc -c file.c -o file.o
+[ ${1//[!2]} ] && gcc -c sbwn.c -o sbwn.o -lssw
+gcc file.o sbwn.o cal.c -o calendar -lssw -lpthread
+wc -l file.h file.c ../../so/3/ssw.h ../../so/3/ssw.c sbwn.h sbwn.c cal.c
