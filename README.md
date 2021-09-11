@@ -8,4 +8,4 @@
 
 `gcc mkfont.c -o mkfont -lssw`
 
-Note: both require [libssw](github.com/mllegoman/ssw)
+Note: both require [libssw](https://github.com/mllegoman/ssw)
