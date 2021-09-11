@@ -1,3 +1,0 @@
-./glean
-echo
-hexdump -c default
