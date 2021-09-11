@@ -4,7 +4,7 @@ A productivity service
 
 ## compiling project:
 
-`chmod +x build && ./build 12`
+`cd 4 && chmod +x build && ./build 12`
 
 `cd mkfont`
 
