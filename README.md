@@ -1,8 +1,11 @@
 # cal
 
-# Note: Requires libssw
+## compiling project:
 
-## What needs what?
-sbwn.c, mkfont.c, and cal.c compile with ssw
+`chmod +x build && ./build 12`
 
-all else requires std libraries found anywhere
+`cd mkfont`
+
+`gcc mkfont.c -o mkfont -lssw`
+
+Note: both require [libssw](github.com/mllegoman/ssw)
