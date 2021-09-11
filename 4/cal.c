@@ -117,10 +117,15 @@ i = 0;
 		RegionFill(x+i*128/dscl, y+256/dscl, 128/dscl, 1, RGB(255, 255, 255), 19);
 		} else {
 		o = j;
-			while(1) {
+			while(1 - (font[o]==3||font[o]==2)) {
 				while (font[o++]!=1) {
 					if (font[o]==2) {
-					goto end;
+					o-=2;
+					break;
+					}
+					if (font[o]==3) {
+					o++;
+					break;
 					}
 				}
 			uint cx[(o - j)/3];
@@ -136,7 +141,6 @@ i = 0;
 			drawcurve(RGB(255, 255, 255), cx, cy, (o - f)/3);
 			}
 		}
-	end:
 	i++;
 	}
 }
