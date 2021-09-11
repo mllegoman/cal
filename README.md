@@ -1,5 +1,7 @@
 # cal
 
+A productivity service
+
 ## compiling project:
 
 `chmod +x build && ./build 12`
