@@ -2,21 +2,21 @@
 
 int main () {
 FILE *F = fopen("default", "r");
-FILE *O = fopen("default.1", "a+");
-unsigned char c[200];
-int i, j;
-i = 0;
-j = 0;
-
-while (c[i++]!=10) {
+unsigned char c[4096];
+int i = 0;
+int j = 0;
 c[i] = fgetc(F);
-printf("%d\n", c[i]);
+while (1- (c[i]==255)) {
+	i++;
+	c[i] = fgetc(F);
 }
+fclose(F);
+i--;
 
-c[i-2] = 3;
+FILE *O = fopen("default", "w");
 
- while (c[j]!=10) {
-// printf("%d\n", c[j]);
- fputc(c[j++], O);
- }
+while(1 - (i==j)) {
+	fputc(c[j++], F);
+}
+fclose(O);
 }
