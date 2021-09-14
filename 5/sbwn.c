@@ -49,10 +49,10 @@ while(*(p + 1)) {
 		}
 		if (c.t==3) {
 		RegionFill(0, 0, WW(*p), WH(*p), RGB(0, 0, 0), *p);
-		setdim(WH(*p), WW(*p), 0);
 		}
 	}
 }
+setdim(WH(*p), WW(*p), 0);
 Clean(*p);
 fclose(scache);
 }
