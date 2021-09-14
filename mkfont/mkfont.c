@@ -134,7 +134,7 @@ draw(x, y, n, l);
 		}
 	alpha = c.txt[0];
 	printf("got our alpha: %c\n", alpha);
-
+	c.txt[0] = 0;
 	m = 0;
 		while(c.txt[0]!=115){
 			while(Pend(0)){
