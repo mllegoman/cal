@@ -10,3 +10,4 @@ extern void hauldata(char sesid, int date, char p);
 extern void funnel(char sesid, char base[]);
 extern char *getfont(char *fontn, char n);
 void sign(unsigned int date);
+char hasText(int date, char cmonth, char realmonth);

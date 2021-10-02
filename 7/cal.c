@@ -4,6 +4,7 @@ write file handling functions for relativising the cache
 
 animations!
  * save x/y coordinates of clicks on date-sections (draw reactions to clicks in redraw)
+ * handle animations in a separate thread
 
 backdrops?
 
@@ -13,10 +14,6 @@ make a more permanant solution to drawing unavail[]
 
 restrict modifyable dates
 */
-
-char hasText(int date, char cmonth, char realmonth) {
-return 1;
-}
 
 #include <ssw.h>
 #include <time.h>
@@ -96,7 +93,7 @@ drawstr(font, nom, WW(19)/2 - index * 128/(500/secsize) / 2, secsize/3, 500/secs
 		y[1] = y[0] + secsize*3/21;
 		y[2] = y[1];
 		y[3] = y[0] + 1;
-		if (cmonth==format.tm_mon&&i==format.tm_mday) {
+		if (cmonth==format.tm_mon&&i+1==format.tm_mday) {
 		drawcurve(RGB(0, 255, 255), x, y, 4, 0, secsize/2, 19);
 		x[0]-=secsize*5/21;
 		x[1]=x[0];
@@ -210,7 +207,7 @@ secsize = redraw(font, unavail, cmonth, w, md, format);
 				}
 			index = (c.y/secsize*9)+c.x/secsize;
 			date = index - (2*(index/9) + 8 + w[cmonth]);
-				if (c.x<secsize*8&&c.x>secsize&&1-(cmonth<format.tm_mon)&&2-(date<format.tm_mday)-(cmonth==format.tm_mon)) {
+				if (c.x<secsize*8&&c.x>secsize&&1-(cmonth<format.tm_mon)&&2-(date+1<format.tm_mday)-(cmonth==format.tm_mon)) {
 					if (!(date<0)&&!(date>md[cmonth]-1)) {
 					date+=(cmonth-format.tm_mon+1)<<5;
 					i = 0;
@@ -243,9 +240,9 @@ secsize = redraw(font, unavail, cmonth, w, md, format);
 						if (i<19) {
 						info[i][1] = 0;
 						unavail[i] = 0;
-						redraw(font, unavail, cmonth, w, md, format);
 						pthread_join(thread[i], NULL);
 						hauldata(i, date, 1);
+						redraw(font, unavail, cmonth, w, md, format);
 						}
 					}
 				}

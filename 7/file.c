@@ -293,3 +293,33 @@ fputc(m[2], F);
 fputc(m[3], F);
 fclose(F);
 }
+
+char hasText(int date, char cmonth, char realmonth) {
+char *datefile = getcfg();
+int i = 0;
+char dif = cmonth - realmonth + 1;
+char isH = dif > 9;
+while (datefile[i]) {
+i++;
+}
+
+if (dif<1) {
+return 0;
+}
+
+datefile[i++] = dif + 48 + 7*isH;
+datefile[i++] = 47;
+datefile[i++] = date/10 + 48;
+datefile[i++] = date%10 + 48;
+datefile[i] = 0;
+
+FILE *F = fopen(datefile, "r");
+	if (F) {
+		if ((unsigned char)fgetc(F)==255) {
+		return 0;
+		}
+	} else {
+	return 0;
+	}
+return 1;
+}
