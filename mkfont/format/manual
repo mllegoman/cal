@@ -1,0 +1,10 @@
+[ $1 ] || echo requires input: "0/1"
+[ $1 ] || exit
+while read l
+do
+a=`echo $l | grep -o code=\"*.*\"`
+b=`echo $l | grep -o name=\".*.\"`
+a=${a#*\"}
+b=${b#*\"}
+echo ${a//\"*} ${b//\"*} >> hex$1
+done<<<`grep code desiredfont.ttx | grep name`
