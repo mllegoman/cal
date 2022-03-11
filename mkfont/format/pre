@@ -2,8 +2,8 @@ ttx -t cmap -t glyf desiredfont.ttf
 grep 0xe desiredfont.ttf 
 while read l
 do
-ln[i]=`grep ${l//*" "} desiredfont.ttx`
-${ln[i]//" "*}
+ln[i]=`grep -n ${l//*" "} desiredfont.ttx`
+${ln[i]//:*}
 i=$[i+1]
 done<hex$? # also determine if ttx provides names for each hex code
            # its annoying that some fonts stray from this simple 
