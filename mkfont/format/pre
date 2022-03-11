@@ -1,7 +1,7 @@
-ttx -t cmap -t glyf desiredfont.ttf
+ls | grep desiredfont.ttx || ttx -t cmap -t glyf desiredfont.ttf
 while read l
 do
-ln[i]=`grep -v map desiredfont.ttx | grep -n ${l//*" "}`
+ln[i]=`grep -n \"${l//*" "}\" desiredfont.ttx | grep -v map`
 ln[i]=${ln[i]//:*}
 i=$[i+1]
 done<hex$1 # also determine if ttx provides names for each hex code
@@ -11,11 +11,29 @@ s=`wc -l desiredfont.ttx`
 s=${s//" "*}
 while seq ${ln[j]} > /dev/null 
 do
-echo ${ln[j]}: >> contour
+u=`head -$[j+1] hex$1 | tail -1`
+a=`head -${ln[j]} desiredfont.ttx | tail -1`
+grep \"\"<<<$a > /dev/null && echo :${u//" "*},0,0,0,0:
+b=${a//*xMin=\"}
+b=${b//\"*}
+c=${a//*yMin=\"}
+c=${c//\"*}
+d=${a//*xMax=\"}
+d=${d//\"*}
+e=${a//*yMax=\"}
+e=${e//\"*}
+echo :${b},${c},${d},${e}:
   while read l
   do
-    echo $l | grep pt && echo $l >> contour
+    if grep pt<<<$l > /dev/null
+    then
+    b=${l//*x=\"}
+    b=${b//\"*}
+    c=${l//*y=\"}
+    c=${c//\"*}
+    echo ${b},${c}
+    fi
     [ "${l//</TTGlyph>}" ] || break
-  done<<<`tail -$[s-${ln[j]}+1] desiredfont.ttx | tr \* o`
+  done<<<`tail -$[s-${ln[j]}] desiredfont.ttx`
 j=$[j+1]
-done > /dev/null
+done | grep [0-9] > contour
