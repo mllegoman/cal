@@ -1,22 +1,21 @@
 ttx -t cmap -t glyf desiredfont.ttf
-grep 0xe desiredfont.ttf 
 while read l
 do
-ln[i]=`grep -n ${l//*" "} desiredfont.ttx`
-${ln[i]//:*}
+ln[i]=`grep -v map desiredfont.ttx | grep -n ${l//*" "}`
+ln[i]=${ln[i]//:*}
 i=$[i+1]
-done<hex$? # also determine if ttx provides names for each hex code
+done<hex$1 # also determine if ttx provides names for each hex code
            # its annoying that some fonts stray from this simple 
            # standard
-l=`wc -l desiredfont.ttx`
-l=${l//" "*}
-while seq ${ln[j]}
+s=`wc -l desiredfont.ttx`
+s=${s//" "*}
+while seq ${ln[j]} > /dev/null 
 do
-echo ${ln[j]}: >> countour
+echo ${ln[j]}: >> contour
   while read l
   do
-    echo $l | grep x && echo $l >> contour
-    [ ${l//</TTGlyph>} ] || break
-  done<<<`tail -$[l-${ln[j]}] desiredfont.ttx`
+    echo $l | grep pt && echo $l >> contour
+    [ "${l//</TTGlyph>}" ] || break
+  done<<<`tail -$[s-${ln[j]}+1] desiredfont.ttx | tr \* o`
 j=$[j+1]
-done
+done > /dev/null

@@ -2,9 +2,10 @@
 [ $1 ] || exit
 while read l
 do
+[ "${l//*ID=\"[1..3]*}" ] || break
 a=`echo $l | grep -o code=\"*.*\"`
 b=`echo $l | grep -o name=\".*.\"`
 a=${a#*\"}
 b=${b#*\"}
 echo ${a//\"*} ${b//\"*} >> hex$1
-done<<<`grep code desiredfont.ttx | grep name`
+done<<<`egrep "code|ID" desiredfont.ttx | egrep "name|ID"`
