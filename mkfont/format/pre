@@ -13,7 +13,6 @@ while seq ${ln[j]} > /dev/null
 do
 u=`head -$[j+1] hex$1 | tail -1`
 a=`head -${ln[j]} desiredfont.ttx | tail -1`
-grep \"\"<<<$a > /dev/null && echo :${u//" "*},0,0,0,0:
 b=${a//*xMin=\"}
 b=${b//\"*}
 c=${a//*yMin=\"}
@@ -22,13 +21,20 @@ d=${a//*xMax=\"}
 d=${d//\"*}
 e=${a//*yMax=\"}
 e=${e//\"*}
-echo :${b},${c},${d},${e}:
+printf :${b},${c},${d},${e}, | grep -z [0-9] && echo ${u//" "*}:
   while read l
   do
     if grep pt<<<$l > /dev/null
     then
     a=${l//*on=\"}
     a=${a//\"*}
+    k=$[k+a]
+    chk=$[k&1]$a
+    b1=${l1//*x=\"}
+    b1=${b1//\"*}
+    c1=${l1//*y=\"}
+    c1=${c1//\"*}
+    [  ${chk//00} ] || echo $[k=1],${b1},${c1}
     b=${l//*x=\"}
     b=${b//\"*}
     c=${l//*y=\"}
@@ -36,6 +42,7 @@ echo :${b},${c},${d},${e}:
     echo ${a},${b},${c}
     fi
     [ "${l//</TTGlyph>}" ] || break
+    l1=$l
   done<<<`tail -$[s-${ln[j]}] desiredfont.ttx`
 j=$[j+1]
-done | grep [0-9] > contour
+done > contour
