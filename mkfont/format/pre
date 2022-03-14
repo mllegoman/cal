@@ -22,10 +22,12 @@ d=${d//\"*}
 e=${a//*yMax=\"}
 e=${e//\"*}
 printf :${b},${c},${d},${e}, | grep -z [0-9] && echo ${u//" "*}:
+k=0
   while read l
   do
-    if grep pt<<<$l > /dev/null
+    if egrep "pt|PUSH"<<<$l > /dev/null
     then
+    [ ! "${l//*PUSH*}" ] && echo 1,${b},${c} && break
     a=${l//*on=\"}
     a=${a//\"*}
     k=$[k+a]
@@ -39,6 +41,7 @@ printf :${b},${c},${d},${e}, | grep -z [0-9] && echo ${u//" "*}:
     b=${b//\"*}
     c=${l//*y=\"}
     c=${c//\"*}
+    a=$[a*!(k&1)]
     echo ${a},${b},${c}
     fi
     [ "${l//</TTGlyph>}" ] || break

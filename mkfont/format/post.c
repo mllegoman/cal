@@ -31,7 +31,11 @@ if (n[0]=='0') {
 	}
 	j = 2;
 	while (j < i) {
-	out+=(n[j] - 48) * tpow(16, i - j - 1);
+		if (n[j] > 90) {
+		out+=(n[j] - 86) * tpow(16, i - j - 1);
+		} else {
+		out+=(n[j] - 48) * tpow(16, i - j - 1);
+		}
 	j++;
 	}
 } else {
@@ -124,12 +128,32 @@ ana = fgetc(F);
 			i++;
 			}
 		pt[l++] = malloc(dn*3*4);
-		//sect = ft + i;
-		//fseek(F, i, 0);
-		// get to end of section naturally
-		//fseek(F, sect, 0);
-		printf("scanned section (%d) contains %d lines and %d chars\n", l, dn, ft);
-		fseek(F, ftell(F)-1, 0);
+		fseek(F, i - ft, 0);
+		j = 0;
+			while (j < dn) {
+			nchars[0] = 0;
+				while (1-(nchars[k-!!k]==',')) { // dont need while
+				nchars[k] = fgetc(F);
+				k++;
+				}
+			pt[j][0] = ctoi(nchars);
+				if (pt[j-!!j][0]&pt[j][0]) {
+				pt[j-!!j][0] = 0;
+				}
+			nchars[0] = 0;
+				while (1-(nchars[k-!!k]==',')) {
+				nchars[k] = fgetc(F);
+				k++;
+				}
+			pt[j][1] = ctoi(nchars);
+				while (1-(nchars[k-!!k]=='\n')) {
+				nchars[k] = fgetc(F);
+				k++;
+				}
+			pt[j][2] = ctoi(nchars);
+			j++;
+			}
+		i--;
 		}
 	}
 i++;
