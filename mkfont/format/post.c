@@ -115,6 +115,7 @@ ana = fgetc(F);
 		i+=k;
 		secth[j/2][4] = ctoi(nchars);
 		fseek(F, ftell(F)-1, 0);
+		i--;
 		} else {
 		fgetc(F); // get rid of \n
 		i++;
@@ -127,32 +128,41 @@ ana = fgetc(F);
 			ft++;
 			i++;
 			}
-		pt[l++] = malloc(dn*3*4);
-		fseek(F, i - ft, 0);
-		j = 0;
-			while (j < dn) {
+		int big[dn*3];
+		pt[l++] = big;
+		fseek(F, i - ft + 1, 0);
+		//fseek(F, i, 0);
+		sect = 0;
+			while (sect < dn) {
 			nchars[0] = 0;
+			k = 0;
 				while (1-(nchars[k-!!k]==',')) { // dont need while
 				nchars[k] = fgetc(F);
 				k++;
+				printf("%c\n", nchars[k-!!k]);
 				}
-			pt[j][0] = ctoi(nchars);
+			pt[j/2][sect*3] = ctoi(nchars);
+			return 0;
+			printf("%d\n", pt[j/2][sect*3]);
 				if (pt[j-!!j][0]&pt[j][0]) {
 				pt[j-!!j][0] = 0;
 				}
 			nchars[0] = 0;
+			k = 0;
 				while (1-(nchars[k-!!k]==',')) {
 				nchars[k] = fgetc(F);
 				k++;
 				}
-			pt[j][1] = ctoi(nchars);
+			pt[j/2][sect*3+1] = ctoi(nchars);
+			k = 0;
 				while (1-(nchars[k-!!k]=='\n')) {
 				nchars[k] = fgetc(F);
 				k++;
 				}
-			pt[j][2] = ctoi(nchars);
-			j++;
+			pt[j/2][sect*3+2] = ctoi(nchars);
+			sect++;
 			}
+		//fseek(F, ftell(F)-1, 0);
 		i--;
 		}
 	}
