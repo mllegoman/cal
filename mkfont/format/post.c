@@ -152,8 +152,24 @@ i++;
 			nchars[0] = fgetc(F);
 			nchars[1] = fgetc(F);
 			i+=2;
-			pt[j][0] = ctoi(nchars);
-			n = ln;
+			//pt[j][n*3] = ctoi(nchars);
+			k = 0;
+				while (1-(nchars[k-!!k]==',')) {
+				nchars[k] = fgetc(F);
+				k++;
+				i++;
+				}
+			//pt[j][n*3+1] = ctoi(nchars);
+			k = 0;
+				while (1-(nchars[k-!!k]=='\n')) {
+				nchars[k] = fgetc(F);
+				k++;
+				i++;
+				}
+			nchars[k-1] = ',';
+			//pt[j][n*3+2] = ctoi(nchars);
+			//printf("%d %d %d at %d in %d, %d %d\n", pt[j][n*3], pt[j][n*3+1], pt[j][n*3+2], n, ln, i, ftell(F));
+			//n = ln;
 			n++;
 			}
 	j++;
