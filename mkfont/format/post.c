@@ -60,15 +60,10 @@ j = 0;
 while (i < len) {
 ana = fgetc(F);
 j+=(ana==':');
-	//printf("%c\n", ana);
-	//if (ana==':') {
-	//printf("%d\n", ftell(F));
-	//}
 i++;
 }
 
 if (j==0||j&1) {
-printf("apparently we were fucked from the start: %d\n", j);
 return 1;
 }
 
@@ -81,11 +76,15 @@ j = 0;
 k = 0;
 l = 0;
 fseek(F, 0, 0);
-while (i < len) {
+while (1) {
 ana = fgetc(F);
-	while (1-(ana==':')) {
+i++;
+	while (1-(ana==':')&&i < len) {
 	ana = fgetc(F);
 	i++;
+	}
+	if (i==len) {
+	break;
 	}
 		k = 0;
 		nchars[0] = 0;
@@ -118,49 +117,46 @@ ana = fgetc(F);
 		secth[j][3] = ctoi(nchars);
 		k = 0;
 		fgetc(F);
+		i++;
 			while (1-(nchars[k-!!k]==':')) {
 			nchars[k] = fgetc(F);
 			k++;
 			}
 		i+=k;
 		secth[j][4] = ctoi(nchars);
-		printf("%d %d %d %d %d at %d\n", secth[j/2][0], secth[j/2][1], secth[j/2][2], secth[j/2][3], secth[j/2][4], j/2);
+		printf("%d %d %d %d %d at %d\n", secth[j][0], secth[j][1], secth[j][2], secth[j][3], secth[j][4], j);
 		ana = fgetc(F);
 		i++;
-printf("%d %d\n", i, ftell(F));
-return 0;
 			while (1-(ana>47&&ana<58)) {
 			ana = fgetc(F);
 			i++;
 			}
-		n = ftell(F);
-			while (1-(ana==':')&&i < len) {
+		n = ftell(F) - 1;
+			ln = 0;
+			while (ana!=':'&&i < len) {
 			ana = fgetc(F);
-			//printf("%c %d %d\n", ana, i, len);
 			ln+=ana=='\n';
 			i++;
 			}
 		secth[j][5] = ln;
-		fseek(F, n, 0);
 
 
 		int big[ln];
 		pt[j] = big;
 
 
-
+		fseek(F, n, 0);
 		i = n;
 		n = 0;
 			while (n < ln) {
 			nchars[0] = fgetc(F);
-			nchars[1] = fgetc(F); i+=2; // remove
+			nchars[1] = fgetc(F);
+			i+=2;
 			pt[j][0] = ctoi(nchars);
-			
-			
+			n = ln;
 			n++;
 			}
 	j++;
-i++;
 }
 }
 
