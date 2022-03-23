@@ -141,8 +141,7 @@ i++;
 		secth[j][5] = ln;
 
 
-		int big[ln*3];
-		pt[j] = big;
+		pt[j] = malloc(ln*4*3);
 
 
 		fseek(F, n, 0);
@@ -153,6 +152,9 @@ i++;
 			nchars[1] = fgetc(F);
 			i+=2;
 			pt[j][n*3] = ctoi(nchars);
+				if (pt[j][n*3]&&pt[j][n*3-3*!!n]) {
+				pt[j][n*3-3*!!n] = 0;
+				}
 			k = 0;
 				while (1-(nchars[k-!!k]==',')) {
 				nchars[k] = fgetc(F);
@@ -174,21 +176,21 @@ i++;
 	j++;
 }
 fclose(F);
-F = fopen("desired.red", "w");
+
+F = fopen("../../settings/cal/fonts/default.red", "w");
 for (i = 0; i < m; i++) {
-	if (secth[i][4] < 100) {
+	if (secth[i][4] < 128) {
 	fprintf(F, "%c%c%c", secth[i][4], ':', 2);
 		for (j = 0; j < secth[i][5]; j++) {
-			if (pt[i][j*3]&&pt[i][j*3-3*!!j]) {
-			pt[i][j*3-3*!!j] = 0;
-			}
 		pt[i][j*3+1]-=secth[i][0];
 		pt[i][j*3+2]-=secth[i][1];
-		pt[i][j*3+1]*=255;
+		pt[i][j*3+1]*=128;
 		pt[i][j*3+2]*=255;
 		pt[i][j*3+1]/=secth[i][2];
 		pt[i][j*3+2]/=secth[i][3];
-		fprintf(F, "%c%c%c", (unsigned char)pt[i][j*3+1], (unsigned char)pt[i][j*3+2], (unsigned char)pt[i][j*3]);
+		pt[i][j*3+2] = 255 - pt[i][j*3+2];
+		fprintf(F, "%c%c%c", (unsigned char)pt[i][j*3+1], (unsigned char)pt[i][j*3+2], (unsigned char)(pt[i][j*3] + 2*(i==m-1&&j==secth[i][5]-1)));
+		//printf("%d %c", pt[i][j*3], 10*(j%10==0));
 		}
 	}
 }
