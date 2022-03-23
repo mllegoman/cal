@@ -83,7 +83,7 @@ i++;
 	ana = fgetc(F);
 	i++;
 	}
-	if (i==len) {
+	if (i>len - 1) {
 	break;
 	}
 		k = 0;
@@ -124,7 +124,7 @@ i++;
 			}
 		i+=k;
 		secth[j][4] = ctoi(nchars);
-		printf("%d %d %d %d %d at %d\n", secth[j][0], secth[j][1], secth[j][2], secth[j][3], secth[j][4], j);
+		//printf("%d %d %d %d %d at %d\n", secth[j][0], secth[j][1], secth[j][2], secth[j][3], secth[j][4], j);
 		ana = fgetc(F);
 		i++;
 			while (1-(ana>47&&ana<58)) {
@@ -141,7 +141,7 @@ i++;
 		secth[j][5] = ln;
 
 
-		int big[ln];
+		int big[ln*3];
 		pt[j] = big;
 
 
@@ -152,27 +152,48 @@ i++;
 			nchars[0] = fgetc(F);
 			nchars[1] = fgetc(F);
 			i+=2;
-			//pt[j][n*3] = ctoi(nchars);
+			pt[j][n*3] = ctoi(nchars);
 			k = 0;
 				while (1-(nchars[k-!!k]==',')) {
 				nchars[k] = fgetc(F);
 				k++;
 				i++;
 				}
-			//pt[j][n*3+1] = ctoi(nchars);
+			pt[j][n*3+1] = ctoi(nchars);
 			k = 0;
-				while (1-(nchars[k-!!k]=='\n')) {
+				while (1-(nchars[k-!!k]=='\n')&&i < len) {
 				nchars[k] = fgetc(F);
 				k++;
 				i++;
 				}
 			nchars[k-1] = ',';
-			//pt[j][n*3+2] = ctoi(nchars);
-			//printf("%d %d %d at %d in %d, %d %d\n", pt[j][n*3], pt[j][n*3+1], pt[j][n*3+2], n, ln, i, ftell(F));
-			//n = ln;
+			pt[j][n*3+2] = ctoi(nchars);
+			//printf("%d %d %d at %d in %d\n", pt[j][n*3], pt[j][n*3+1], pt[j][n*3+2], n, ln);
 			n++;
 			}
 	j++;
 }
+fclose(F);
+F = fopen("desired.red", "w");
+for (i = 0; i < m; i++) {
+	if (secth[i][4] < 100) {
+	fprintf(F, "%c%c%c", secth[i][4], ':', 2);
+		for (j = 0; j < secth[i][5]; j++) {
+			if (pt[i][j*3]&&pt[i][j*3-3*!!j]) {
+			pt[i][j*3-3*!!j] = 0;
+			}
+		pt[i][j*3+1]-=secth[i][0];
+		pt[i][j*3+2]-=secth[i][1];
+		pt[i][j*3+1]*=255;
+		pt[i][j*3+2]*=255;
+		pt[i][j*3+1]/=secth[i][2];
+		pt[i][j*3+2]/=secth[i][3];
+		fprintf(F, "%c%c%c", (unsigned char)pt[i][j*3+1], (unsigned char)pt[i][j*3+2], (unsigned char)pt[i][j*3]);
+		}
+	}
+}
+
+fclose(F);
+return 0;
 }
 
