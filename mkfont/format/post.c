@@ -13,7 +13,7 @@ n--;
 return u;
 }
 
-int ctoi (char n[7]) {
+int ctoi (char n[10]) {
 int s = 1;
 int out = 0;
 char j = 0;
@@ -49,7 +49,7 @@ return s * out;
 
 int main () {
 int i, j, k, l, m, n, ln;
-char nchars[7];
+char nchars[10];
 char ana;
 FILE *F = fopen("contour", "r");
 fseek(F, 0, 2);
@@ -94,6 +94,7 @@ i++;
 			}
 		i+=k;
 		secth[j][0] = ctoi(nchars);
+		//printf("0 %d\n", i);
 		k = 0;
 			while (1-(nchars[k-!!k]==',')) {
 			nchars[k] = fgetc(F);
@@ -101,6 +102,7 @@ i++;
 			}
 		i+=k;
 		secth[j][1] = ctoi(nchars);
+		//printf("1 %d\n", i);
 		k = 0;
 			while (1-(nchars[k-!!k]==',')) {
 			nchars[k] = fgetc(F);
@@ -108,6 +110,7 @@ i++;
 			}
 		i+=k;
 		secth[j][2] = ctoi(nchars);
+		//printf("2 %d\n", i);
 		k = 0;
 			while (1-(nchars[k-!!k]==',')) {
 			nchars[k] = fgetc(F);
@@ -115,15 +118,19 @@ i++;
 			}
 		i+=k;
 		secth[j][3] = ctoi(nchars);
+		//printf("3 %d %d\n", i, secth[j][3]);
 		k = 0;
 		fgetc(F);
 		i++;
 			while (1-(nchars[k-!!k]==':')) {
 			nchars[k] = fgetc(F);
 			k++;
+			//printf("%d %c", k, 10*(k%30==0));
 			}
 		i+=k;
+		//printf("let me guess\n");
 		secth[j][4] = ctoi(nchars);
+		//printf("4 %d\n", i);
 		//printf("%d %d %d %d %d at %d\n", secth[j][0], secth[j][1], secth[j][2], secth[j][3], secth[j][4], j);
 		ana = fgetc(F);
 		i++;
@@ -177,6 +184,8 @@ i++;
 }
 fclose(F);
 
+//printf("here\n");
+
 F = fopen("../../settings/cal/fonts/default.red", "w");
 for (i = 0; i < m; i++) {
 	if (secth[i][4] < 128) {
@@ -186,8 +195,8 @@ for (i = 0; i < m; i++) {
 		pt[i][j*3+2]-=secth[i][1];
 		pt[i][j*3+1]*=128;
 		pt[i][j*3+2]*=255;
-		pt[i][j*3+1]/=secth[i][2];
-		pt[i][j*3+2]/=secth[i][3];
+		pt[i][j*3+1]/=(secth[i][2]-secth[i][0]);
+		pt[i][j*3+2]/=(secth[i][3]-secth[i][1]);
 		pt[i][j*3+2] = 255 - pt[i][j*3+2];
 		fprintf(F, "%c%c%c", (unsigned char)pt[i][j*3+1], (unsigned char)pt[i][j*3+2], (unsigned char)(pt[i][j*3] + 2*(i==m-1&&j==secth[i][5]-1)));
 		//printf("%d %c", pt[i][j*3], 10*(j%10==0));
