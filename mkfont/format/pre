@@ -36,7 +36,12 @@ k=0
     b1=${b1//\"*}
     c1=${l1//*y=\"}
     c1=${c1//\"*}
-    [  ${chk//00} ] || echo $[k=1],${b1},${c1}
+#   [  ${chk//00} ] || echo $[k=1],${b1},${c1}
+    [ ! ${chk//00} ] && k=1 && echo 0,${b1},${c1} # need to add continuous <contour> and
+						  # and non-continuous on </contour> 
+						  # on=1, on=1
+						  # on=1, on=1
+						  # means 3 lines not 2 
     b=${l//*x=\"}
     b=${b//\"*}
     c=${l//*y=\"}
