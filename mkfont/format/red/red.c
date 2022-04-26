@@ -28,7 +28,7 @@ if (F==0||O==0) {
 return 1;
 }
 
-uint32_t ntable, i;
+uint32_t ntable, i, j;
 fseek(F, 4, 0);
 ntable = (fgetc(F)<<8) + fgetc(F);
 fseek(F, 12, 0);
@@ -59,13 +59,13 @@ while (j < 4) {
 j++;
 }
 
-fseek(F, offset[where("head")] + 336, 2);
+fseek(F, offset[where("head")] + 336, 0);
 uint32_t flavor = fgetc(F)+fgetc(F)+fgetc(F)+fgetc(F);
 printf("%d\n", flavor);
-fseek(F, offset[where("maxp")] + 4, 2);
+fseek(F, offset[where("maxp")] + 4, 0);
 uint16_t nglyph = (fgetc(F)<<8) + fgetc(F);
 printf("%d\n", nglyph);
-fseek(F, offset[where("loca")], 2);
+fseek(F, offset[where("loca")], 0);
 uint32_t loca[nglyph+1];
 
 i = 0;
@@ -83,9 +83,22 @@ if (flavor) {
 
 uint16 glyphs[5*(nglyph + 1)];
 
-// read glyphs and begin on cmap
+i = 0;
+while (i < nglyphs + 1) {
+fseek(F, loca[i], 0);
+	j = 0;
+	while (j < 5) {
+	glyphs[i*5+j] = ((fgetc(F)<<8) | fgetc(F));
+	j++;
+	}
+i++;
+}
 
-fseek(F, offset[where("cmap")], 2);
+// read glyph table?
+
+fseek(F, offset[where("cmap")], 0);
+
+// figure out cmap
 
 fclose(F);
 fclose(O);
