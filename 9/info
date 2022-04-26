@@ -1,0 +1,7 @@
+test.c: In function ‘main’:
+test.c:623:1: warning: ‘uint32’ is deprecated [-Wdeprecated-declarations]
+  623 | uint32 i = 0;
+      | ^~~~~~
+test.c:624:1: warning: ‘uint64’ is deprecated [-Wdeprecated-declarations]
+  624 | uint64 j = 0;
+      | ^~~~~~
