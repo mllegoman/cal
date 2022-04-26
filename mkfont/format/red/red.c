@@ -1,19 +1,18 @@
 #include "main.h"
 
 uint32_t needn = 5;
-uint32_t needed[needn]; 
-needed[0] = ('m'<<32) + ('a'<<16) + ('x'<<8) + 'p'; // may seem strange now
-needed[1] = ('c'<<32) + ('m'<<16) + ('a'<<8) + 'p'; // but better font support depends on this
-needed[2] = ('g'<<32) + ('l'<<16) + ('y'<<8) + 'p';
-needed[3] = ('l'<<32) + ('o'<<16) + ('c'<<8) + 'a';
-needed[4] = ('h'<<32) + ('e'<<16) + ('a'<<8) + 'd';
-
+uint32_t needed[] = {0b001101101011000010111100001110000,    //maxp
+			0b01100011011011010110000101110000,  //cmap
+			0b01100111011011000111100101100110,  //glyf
+			0b01101100011011110110001101100001,  //loca
+			0b01101000011001010110000101100100}; //head
 char where (char s[4]) {
 char i = 0;
 	while (i < needn) {
-		if ((s[0]<<24)+(s[0]<<16)+(s[0]<<8)+s[3]==needed[i]) {
+		if ((s[0]<<24)+(s[1]<<16)+(s[2]<<8)+s[3]==needed[i]) {
 		return i;
 		}
+	i++;
 	}
 return needn;
 }
@@ -35,22 +34,21 @@ fseek(F, 12, 0);
 uint32_t associate[ntable];
 uint32_t toffset[ntable];
 uint32_t tlength[ntable];
-uint32_t offset[4];
-uint32_t length[4];
+uint32_t offset[needn];
+uint32_t length[needn];
 
-i = 0
+i = 0;
 while (i < ntable) {
 associate[i] = (fgetc(F)<<24) + (fgetc(F)<<16) + (fgetc(F)<<8) + fgetc(F);
 fgetc(F);fgetc(F);fgetc(F);fgetc(F);
 toffset[i] = (fgetc(F)<<24) + (fgetc(F)<<16) + (fgetc(F)<<8) + fgetc(F);
-fgetc(F);fgetc(F);fgetc(F);fgetc(F);
 tlength[i] = (fgetc(F)<<24) + (fgetc(F)<<16) + (fgetc(F)<<8) + fgetc(F);
 i++;
 }
 
 j = 0;
-while (j < 4) {
-	i = 0;
+while (j < needn) {
+i = 0;
 	while (1-(associate[i]==needed[j])) {
 	i++;
 	}
@@ -60,11 +58,9 @@ j++;
 }
 
 fseek(F, offset[where("head")] + 336, 0);
-uint32_t flavor = fgetc(F)+fgetc(F)+fgetc(F)+fgetc(F);
-printf("%d\n", flavor);
+uint16_t flavor = fgetc(F)+fgetc(F);
 fseek(F, offset[where("maxp")] + 4, 0);
 uint16_t nglyph = (fgetc(F)<<8) + fgetc(F);
-printf("%d\n", nglyph);
 fseek(F, offset[where("loca")], 0);
 uint32_t loca[nglyph+1];
 
@@ -76,29 +72,59 @@ if (flavor) {
 	}
 } else {
 	while (i < nglyph + 1) {
-	loca[i] = ((fgetc(F)<<10) + (fgetc(F)<<2); // 16 bit in - 32 out
+	loca[i] = (fgetc(F)<<10) + (fgetc(F)<<2); // 16 bit in - 32 out
 	i++;
 	}
 }
 
-uint16 glyphs[5*(nglyph + 1)];
+int16_t glyphs[5*(nglyph + 1)];
+uint16_t t_len, pts; 
 
 i = 0;
-while (i < nglyphs + 1) {
-fseek(F, loca[i], 0);
-	j = 0;
+while (i < nglyph + 1) {
+fseek(F, offset[where("glyf")] + loca[i], 0);
+j = 0;
 	while (j < 5) {
 	glyphs[i*5+j] = ((fgetc(F)<<8) | fgetc(F));
 	j++;
 	}
+fseek(F, ftell(F) + glyphs[i*5]*2, 0);
+// glyphs[i*5] is location of points not point values
+//pts = (fgetc(F)<<8) + fgetc(F);
+t_len = (fgetc(F)<<8) + fgetc(F);
+fseek(F, ftell(F) + t_len, 0);
+
 i++;
 }
 
-// read glyph table?
-
 fseek(F, offset[where("cmap")], 0);
+fgetc(F);fgetc(F);
+uint16_t cmaptn = (fgetc(F)<<8) + fgetc(F);
+uint16_t PID[cmaptn];
+uint16_t EID[cmaptn];
+uint32_t s_table[cmaptn]
+uint16_t format;
 
-// figure out cmap
+i = 0;
+while (i < cmaptn) {
+PID[i] = (fgetc(F)<<8) + fgetc(F);
+EID[i] = (fgetc(F)<<8) + fgetc(F);
+s_table = offset[where("cmap")] + (fgetc(F)<<24) + 
+                                  (fgetc(F)<<16) + 
+                                  (fgetc(F)<<8) + fgetc(F);
+i++;
+}
+
+i = 0;
+while (i < cmaptn) {
+fseek(F, s_table[i], 0);
+format = (fgetc(F)<<8) + fgetc(F);
+	if (format > 6&&format < 14) { // get rid of "reserved" value
+	fgetc(F);fgetc(F);
+	}
+t_len = (fgetc(F)<<8) + fgetc(F);
+}
+
 
 fclose(F);
 fclose(O);
